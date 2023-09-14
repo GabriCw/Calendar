@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, Modal } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import { TextInput } from 'react-native-paper';
 import Button from 'apsl-react-native-button';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 class Login extends Component {
 
@@ -46,6 +47,7 @@ class Calendar extends Component {
         password: '',
       },
       isLoginVisible: true,
+      selectedDate: null,
     };
   }
 
@@ -90,6 +92,11 @@ class Calendar extends Component {
     });
   };
 
+  handleDayPress = (day) => {
+    this.setState({selectedDate: day.dateString});
+    alert(this.state.selectedDate);
+  }
+
   render() {
     return (
       <>
@@ -113,8 +120,12 @@ class Calendar extends Component {
                     <Button style={styles.btn} onPress={() => this.handleDelete(item.id)}><Text style={styles.btntxt}>X</Text></Button>
                   </View>
                 )}
+                onDayPress={this.handleDayPress}
               />
-              <Button style={styles.add} onPress={() => this.setState({ isModalVisible: true })}><Text style={styles.btntxt}>Adicionar Tarefa</Text></Button>
+              <View style={{backgroundColor:"#f0f0f0"}}>
+                <Button style={styles.add} onPress={() => this.setState({ isModalVisible: true })}><Text style={styles.btntxt}>Adicionar Tarefa</Text></Button>
+                <Button style={styles.add} onPress={() => this.setState({ isLoginVisible: true })}><Text style={styles.btntxt}>Sair</Text></Button>
+              </View>
 
               <AddTaskModal
                 isVisible={this.state.isModalVisible}
@@ -133,7 +144,7 @@ class Calendar extends Component {
 
 class AddTaskModal extends Component {
   render() {
-    const { isVisible, newTask, onClose, onSave, onChange } = this.props;
+    const { isVisible, newTask, onClose, onSave, onChange} = this.props;
 
     return (
       <Modal visible={isVisible} animationType="slide">
@@ -242,9 +253,7 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     fontSize: 20,
     marginLeft: 40,
-    top: '90%',
     fontWeight: 'bold',
-    position: 'absolute',
   },
   loginContainer: {
     flex: 1,
