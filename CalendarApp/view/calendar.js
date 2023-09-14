@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Modal } from 'react-native';
 import { Agenda } from 'react-native-calendars';
-import { Button, TextInput } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
+import Button from 'apsl-react-native-button';
 
 class Calendar extends Component {
   constructor(props) {
@@ -51,7 +52,7 @@ class Calendar extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 , paddingTop: 30 }}>
+      <View style={{ flex: 1 , paddingTop: 30}}>
         <Agenda
           items={this.state.items}
           renderItem={(item) => (
@@ -64,7 +65,7 @@ class Calendar extends Component {
             </View>
           )}
         />
-        <Button onPress={() => this.setState({ isModalVisible: true })}>Adicionar Tarefa</Button>
+        <Button style={styles.add} onPress={() => this.setState({ isModalVisible: true })}><Text style={styles.btntxt}>Adicionar Tarefa</Text></Button>
 
         <AddTaskModal
           isVisible={this.state.isModalVisible}
@@ -85,6 +86,8 @@ class AddTaskModal extends Component {
     return (
       <Modal visible={isVisible} animationType="slide">
         <View style={styles.modalContainer}>
+          <Text style={{ fontSize: 25, fontWeight: 'bold', marginBottom: 40 }}>Adicione Sua Tarefa</Text>
+
           <TextInput style={styles.modalinput} underlineColor="transparent" 
             placeholder="Nome da Tarefa"
             value={newTask.name}
@@ -95,8 +98,8 @@ class AddTaskModal extends Component {
             value={newTask.time}
             onChangeText={(text) => onChange('time', text)}
           />
-          <Button style={styles.modalbutton1} onPress={onSave}>Salvar</Button>
-          <Button style={styles.modalbutton2} onPress={onClose}>Cancelar</Button>
+          <Button style={styles.modalbutton1} onPress={onSave}><Text style={styles.btntxt}>Salvar</Text></Button>
+          <Button style={styles.modalbutton2} onPress={onClose}><Text style={styles.btntxt}>Cancelar</Text></Button>
         </View>
       </Modal>
     );
@@ -113,6 +116,7 @@ const styles = StyleSheet.create({
     marginTop: 17,
     flexDirection: 'row',
     alignItems: 'center',
+    alignContent: 'center',
     justifyContent: 'space-between',
   },
   time: {
@@ -121,16 +125,20 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   btn: {
-    width: 40,
+    width: 60,
     height: 40, 
     backgroundColor: '#f0f0f0',
-    borderRadius: '100%',
-    marginRight: 40,
+    borderTopLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 0,
+    marginRight:20,
+    margin: 10,
   },
   btntxt: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#4F4F4F',
+    color: '#000',
   },
   modalContainer: {
     flex: 1,
@@ -141,22 +149,50 @@ const styles = StyleSheet.create({
   modalinput: {
     width: '80%',
     marginBottom: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 15,
+    borderBottomRightRadius: 15,
     backgroundColor: '#f0f0f0',
-    borderBottomWidth: 2,
+    borderBottomWidth: 0,
     borderBlockColor: '#000',
+    fontWeight: 'bold',
   },
   modalbutton1: {
     width: '30%',
     marginBottom: 10,
-    backgroundColor: '#f2dbf0',
+    backgroundColor: '#92d9f0',
     marginTop: 30,
+    marginLeft: '34%',
+    borderTopLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 0,
   },
   modalbutton2: {
     width: '30%',
     marginBottom: 10,
-    backgroundColor: '#f2dbf0',
+    backgroundColor: '#92d9f0',
+    marginLeft: '34%',
+    borderTopLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 0,
+  },
+  add: {
+    width: '80%',
+    height: 60,
+    backgroundColor: '#92d9f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 0,
+    borderColor: '#000',
+    fontSize: 20,
+    marginLeft: 40,
+    top: '90%',
+    fontWeight: 'bold',
+    position: 'absolute',
   },
 });
 
