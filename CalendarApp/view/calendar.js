@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Modal } from 'react-native';
 import { Agenda } from 'react-native-calendars';
-import { Button } from 'react-native-paper';
+import { Button, TextInput } from 'react-native-paper';
 
 class Calendar extends Component {
   constructor(props) {
@@ -10,7 +10,12 @@ class Calendar extends Component {
       items:{
         '2023-09-13': [{id:1, name: 'Reunião de trabalho', time: '14:00 - 16:00'  }],
         '2023-09-14': [{id:2, name: 'Ligar para o cliente', time: '11:00 - 11:30' }, {id:3, name: 'Ligar para o cliente', time: '11:00 - 11:30' }],
-      }
+      },
+      isModalVisible: false,
+      newTask: {
+        name: '',
+        time: '',
+      },
     };
   }
 
@@ -27,6 +32,23 @@ class Calendar extends Component {
       }
   }
 
+  handleAdd = () => {
+    const { newTask } = this.state;
+    const dateKey = '2023-09-15'; // Defina a chave de data apropriada aqui.
+    const newItem = { id: Date.now(), ...newTask };
+    
+    if (!this.state.items[dateKey]) {
+      this.state.items[dateKey] = [];
+    }
+
+    this.state.items[dateKey].push(newItem);
+
+    this.setState({
+      isModalVisible: false,
+      newTask: { name: '', time: '' },
+    });
+  };
+
   render() {
     return (
       <View style={{ flex: 1 , paddingTop: 30 }}>
@@ -42,7 +64,41 @@ class Calendar extends Component {
             </View>
           )}
         />
+        <Button onPress={() => this.setState({ isModalVisible: true })}>Adicionar Tarefa</Button>
+
+        <AddTaskModal
+          isVisible={this.state.isModalVisible}
+          newTask={this.state.newTask}
+          onClose={() => this.setState({ isModalVisible: false })}
+          onSave={this.handleAdd}
+          onChange={(fieldName, value) => this.setState({ newTask: { ...this.state.newTask, [fieldName]: value } })}
+        />
       </View>
+    );
+  }
+}
+
+class AddTaskModal extends Component {
+  render() {
+    const { isVisible, newTask, onClose, onSave, onChange } = this.props;
+
+    return (
+      <Modal visible={isVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+          <TextInput
+            placeholder="Nome da Tarefa"
+            value={newTask.name}
+            onChangeText={(text) => onChange('name', text)}
+          />
+          <TextInput
+            placeholder="Horário"
+            value={newTask.time}
+            onChangeText={(text) => onChange('time', text)}
+          />
+          <Button onPress={onSave}>Salvar</Button>
+          <Button onPress={onClose}>Cancelar</Button>
+        </View>
+      </Modal>
     );
   }
 }
@@ -75,7 +131,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#4F4F4F',
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default Calendar;
