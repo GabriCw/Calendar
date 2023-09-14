@@ -32,9 +32,20 @@ class Login extends Component {
 class Calendar extends Component {
   constructor(props) {
     super(props);
+
+    const currentDate = new Date(); // Obtém a data atual
+    const year = currentDate.getFullYear(); // Obtém o ano
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Obtém o mês (0-11, adicionamos 1)
+    const day = currentDate.getDate().toString().padStart(2, '0'); // Obtém o dia
+
+    // Formata a data como "xxxx-xx-xx"
+    const formattedDate = `${year}-${month}-${day}`;
+
     this.state = {
+      selectedDate: formattedDate,
+    
       items:{
-        '2023-09-13': [{id:1, name: 'Reunião de trabalho', time: '14:00 - 16:00'  }],
+        '2023-09-13': [{id:1, name: 'Reunião de trabalho', time: '14:00 - 16:00' }],
         '2023-09-14': [{id:2, name: 'Ligar para o cliente', time: '11:00 - 11:30' }, {id:3, name: 'Ligar para o cliente', time: '11:00 - 11:30' }],
       },
       isModalVisible: false,
@@ -47,7 +58,6 @@ class Calendar extends Component {
         password: '',
       },
       isLoginVisible: true,
-      selectedDate: null,
     };
   }
 
@@ -77,7 +87,7 @@ class Calendar extends Component {
 
   handleAdd = () => {
     const { newTask } = this.state;
-    const dateKey = '2023-09-15'; // Defina a chave de data apropriada aqui.
+    const dateKey = this.state.selectedDate; // Defina a chave de data apropriada aqui.
     const newItem = { id: Date.now(), ...newTask };
     
     if (!this.state.items[dateKey]) {
@@ -93,8 +103,9 @@ class Calendar extends Component {
   };
 
   handleDayPress = (day) => {
-    this.setState({selectedDate: day.dateString});
-    alert(this.state.selectedDate);
+    this.setState({selectedDate: day.dateString}, ()=> {
+      // alert(this.state.selectedDate);
+    })
   }
 
   render() {
@@ -110,6 +121,7 @@ class Calendar extends Component {
           : 
             <>
               <Agenda
+                onDayPress={this.handleDayPress}
                 items={this.state.items}
                 renderItem={(item) => (
                   <View style={styles.item}>
@@ -120,7 +132,6 @@ class Calendar extends Component {
                     <Button style={styles.btn} onPress={() => this.handleDelete(item.id)}><Text style={styles.btntxt}>X</Text></Button>
                   </View>
                 )}
-                onDayPress={this.handleDayPress}
               />
               <View style={{backgroundColor:"#f0f0f0"}}>
                 <Button style={styles.add} onPress={() => this.setState({ isModalVisible: true })}><Text style={styles.btntxt}>Adicionar Tarefa</Text></Button>
