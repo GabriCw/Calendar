@@ -9,21 +9,20 @@ class Login extends Component {
   render() {
     const { logar, onChangeLogin, login } = this.props;
     return (
-      <View>
-        <Text>Nome de Usuário:</Text>
-        <TextInput
+      <View style={styles.loginContainer}>
+        <Text style={{ fontSize: 25, fontWeight: 'bold', marginBottom: 40 }}>Faça Seu Login</Text>
+        <TextInput style={styles.logininput}
           placeholder="Digite seu nome de usuário"
           value={login.username}
           onChangeText={(text) => onChangeLogin( 'username', text )}
         />
-        <Text>Senha:</Text>
-        <TextInput
+        <TextInput style={styles.logininput}
           placeholder="Digite sua senha"
           secureTextEntry={true}
           value={login.password}
           onChangeText={(text) => onChangeLogin( 'password', text )}
         />
-        <Button title="Login" onPress={logar} />
+        <Button style={styles.loginbutton} onPress={logar}><Text style={styles.btntxt}>Enviar</Text></Button>
       </View>
     );
   }
@@ -246,6 +245,33 @@ const styles = StyleSheet.create({
     top: '90%',
     fontWeight: 'bold',
     position: 'absolute',
+  },
+  loginContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+  },
+  logininput: {
+    width: '80%',
+    marginBottom: 10,
+    borderTopLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    backgroundColor: '#f0f0f0',
+    borderBottomWidth: 0,
+    borderBlockColor: '#000',
+    fontWeight: 'bold',
+  },
+  loginbutton: {
+    width: '30%',
+    marginBottom: 10,
+    backgroundColor: '#92d9f0',
+    marginTop: 30,
+    marginLeft: '34%',
+    borderTopLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 0,
   },
 });
 
