@@ -85,18 +85,18 @@ class AddTaskModal extends Component {
     return (
       <Modal visible={isVisible} animationType="slide">
         <View style={styles.modalContainer}>
-          <TextInput
+          <TextInput style={styles.modalinput} underlineColor="transparent" 
             placeholder="Nome da Tarefa"
             value={newTask.name}
             onChangeText={(text) => onChange('name', text)}
           />
-          <TextInput
+          <TextInput style={styles.modalinput} underlineColor="transparent"
             placeholder="Horário"
             value={newTask.time}
             onChangeText={(text) => onChange('time', text)}
           />
-          <Button onPress={onSave}>Salvar</Button>
-          <Button onPress={onClose}>Cancelar</Button>
+          <Button style={styles.modalbutton1} onPress={onSave}>Salvar</Button>
+          <Button style={styles.modalbutton2} onPress={onClose}>Cancelar</Button>
         </View>
       </Modal>
     );
@@ -136,6 +136,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    
+  },
+  modalinput: {
+    width: '80%',
+    marginBottom: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    backgroundColor: '#f0f0f0',
+    borderBottomWidth: 2,
+    borderBlockColor: '#000',
+  },
+  modalbutton1: {
+    width: '30%',
+    marginBottom: 10,
+    backgroundColor: '#f2dbf0',
+    marginTop: 30,
+  },
+  modalbutton2: {
+    width: '30%',
+    marginBottom: 10,
+    backgroundColor: '#f2dbf0',
   },
 });
 
