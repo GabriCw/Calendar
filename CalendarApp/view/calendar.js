@@ -4,6 +4,31 @@ import { Agenda } from 'react-native-calendars';
 import { TextInput } from 'react-native-paper';
 import Button from 'apsl-react-native-button';
 
+class Login extends Component {
+
+  render() {
+    const { logar, onChangeLogin, login } = this.props;
+    return (
+      <View>
+        <Text>Nome de Usuário:</Text>
+        <TextInput
+          placeholder="Digite seu nome de usuário"
+          value={login.username}
+          onChangeText={(text) => onChangeLogin( 'username', text )}
+        />
+        <Text>Senha:</Text>
+        <TextInput
+          placeholder="Digite sua senha"
+          secureTextEntry={true}
+          value={login.password}
+          onChangeText={(text) => onChangeLogin( 'password', text )}
+        />
+        <Button title="Login" onPress={logar} />
+      </View>
+    );
+  }
+}
+
 class Calendar extends Component {
   constructor(props) {
     super(props);
@@ -17,8 +42,24 @@ class Calendar extends Component {
         name: '',
         time: '',
       },
+      login: {
+        username: '',
+        password: '',
+      },
+      isLoginVisible: true,
     };
   }
+
+  handleLogin = () => {
+    // Verifique as credenciais aqui, por exemplo:
+    const { username, password } = this.state.login;
+    if (username === 'usuario' && password === 'senha') {
+      this.setState({isLoginVisible: false});
+      alert('Login realizado com sucesso!');
+    } else {
+      alert('Credenciais inválidas');
+    }
+  };
 
   handleDelete = (itemId) => {
       const itemsNew = this.state.items;
@@ -52,29 +93,41 @@ class Calendar extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 , paddingTop: 30}}>
-        <Agenda
-          items={this.state.items}
-          renderItem={(item) => (
-            <View style={styles.item}>
-              <View>
-                <Text style={styles.time}>{item.time}</Text>
-                <Text>{item.name}</Text>
-              </View>
-              <Button style={styles.btn} onPress={() => this.handleDelete(item.id)}><Text style={styles.btntxt}>X</Text></Button>
-            </View>
-          )}
-        />
-        <Button style={styles.add} onPress={() => this.setState({ isModalVisible: true })}><Text style={styles.btntxt}>Adicionar Tarefa</Text></Button>
+      <>
+        <View style={{ flex: 1 , paddingTop: 30}}>
+          {this.state.isLoginVisible ? 
+            <Login 
+              logar={this.handleLogin} 
+              login={this.state.login}
+              onChangeLogin={(fieldName, value) => this.setState({ login: { ...this.state.login, [fieldName]: value } })}
+            /> 
+          : 
+            <>
+              <Agenda
+                items={this.state.items}
+                renderItem={(item) => (
+                  <View style={styles.item}>
+                    <View>
+                      <Text style={styles.time}>{item.time}</Text>
+                      <Text>{item.name}</Text>
+                    </View>
+                    <Button style={styles.btn} onPress={() => this.handleDelete(item.id)}><Text style={styles.btntxt}>X</Text></Button>
+                  </View>
+                )}
+              />
+              <Button style={styles.add} onPress={() => this.setState({ isModalVisible: true })}><Text style={styles.btntxt}>Adicionar Tarefa</Text></Button>
 
-        <AddTaskModal
-          isVisible={this.state.isModalVisible}
-          newTask={this.state.newTask}
-          onClose={() => this.setState({ isModalVisible: false })}
-          onSave={this.handleAdd}
-          onChange={(fieldName, value) => this.setState({ newTask: { ...this.state.newTask, [fieldName]: value } })}
-        />
-      </View>
+              <AddTaskModal
+                isVisible={this.state.isModalVisible}
+                newTask={this.state.newTask}
+                onClose={() => this.setState({ isModalVisible: false })}
+                onSave={this.handleAdd}
+                onChange={(fieldName, value) => this.setState({ newTask: { ...this.state.newTask, [fieldName]: value } })}
+              />
+            </>
+          }
+        </View>
+      </>
     );
   }
 }

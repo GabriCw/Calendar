@@ -4,7 +4,9 @@ import Calendar from './view/calendar';
 
 export default function App() {
   return (
+    <>
       <Calendar />
+    </>
   );
 }
 
