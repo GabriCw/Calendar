@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { View, StyleSheet, Text, Modal } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import { TextInput } from 'react-native-paper';
@@ -37,6 +37,7 @@ class Calendar extends Component {
     const year = currentDate.getFullYear(); // Obtém o ano
     const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Obtém o mês (0-11, adicionamos 1)
     const day = currentDate.getDate().toString().padStart(2, '0'); // Obtém o dia
+    const hour = currentDate.getHours().toString().padStart(2, '0') + ':' + currentDate.getMinutes().toString().padStart(2, '0')
 
     // Formata a data como "xxxx-xx-xx"
     const formattedDate = `${year}-${month}-${day}`;
@@ -54,17 +55,19 @@ class Calendar extends Component {
         time: '',
       },
       login: {
-        username: '',
-        password: '',
+        username: 'Usuario',
+        password: 'senha',
       },
       isLoginVisible: true,
+      text: hour,
+      textf: hour,
     };
   }
 
   handleLogin = () => {
     // Verifique as credenciais aqui, por exemplo:
     const { username, password } = this.state.login;
-    if (username === 'usuario' && password === 'senha') {
+    if (username === 'Usuario' && password === 'senha') {
       this.setState({isLoginVisible: false});
       alert('Login realizado com sucesso!');
     } else {
@@ -110,6 +113,7 @@ class Calendar extends Component {
 
   render() {
     return (
+    
       <>
         <View style={{ flex: 1 , paddingTop: 30}}>
           {this.state.isLoginVisible ? 
@@ -126,7 +130,7 @@ class Calendar extends Component {
                 renderItem={(item) => (
                   <View style={styles.item}>
                     <View>
-                      <Text style={styles.time}>{item.time}</Text>
+                      <Text style={styles.time}>{this.state.text} - {this.state.textf}</Text>
                       <Text>{item.name}</Text>
                     </View>
                     <Button style={styles.btn} onPress={() => this.handleDelete(item.id)}><Text style={styles.btntxt}>X</Text></Button>
@@ -144,6 +148,8 @@ class Calendar extends Component {
                 onClose={() => this.setState({ isModalVisible: false })}
                 onSave={this.handleAdd}
                 onChange={(fieldName, value) => this.setState({ newTask: { ...this.state.newTask, [fieldName]: value } })}
+                textData={(value) => this.setState({ text: value })}
+                textDataf={(value) => this.setState({ textf: value })}
               />
             </>
           }
@@ -154,8 +160,57 @@ class Calendar extends Component {
 }
 
 class AddTaskModal extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      date: new Date(),
+      mode: 'time',
+      show: true,
+      datef: new Date(),
+      modef: 'time',
+      showf: true,
+    };
+  }
+
+  onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.date;
+    this.setState({show: Platform.OS === 'ios'});
+    this.setState({date: currentDate});
+
+    let tempDate = new Date(currentDate);
+    let fDate = tempDate.getDate() + '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getFullYear();
+    let fTime = tempDate.getHours() + ':' + tempDate.getMinutes(); 
+
+    this.props.textData(fTime);
+  }
+
+  onChangeDatef = (event, selectedDatef) => {
+    const currentDatef = selectedDatef || this.state.datef;
+    this.setState({showf: Platform.OS === 'ios'});
+    this.setState({datef: currentDatef});
+
+    let tempDatef = new Date(currentDatef);
+    let fDatef = tempDatef.getDate() + '-' + (tempDatef.getMonth() + 1) + '-' + tempDatef.getFullYear();
+    let fTimef = tempDatef.getHours() + ':' + tempDatef.getMinutes(); 
+
+    this.props.textDataf(fTimef);
+  }
+
+
+  showMode = (currentMode) => {
+    this.setState({show: true});
+    this.setState({mode: currentMode});
+  }
+
+  showModef = (currentModef) => {
+    this.setState({showf: true});
+    this.setState({modef: currentModef});
+  }
+  
   render() {
     const { isVisible, newTask, onClose, onSave, onChange} = this.props;
+
 
     return (
       <Modal visible={isVisible} animationType="slide">
@@ -167,11 +222,39 @@ class AddTaskModal extends Component {
             value={newTask.name}
             onChangeText={(text) => onChange('name', text)}
           />
-          <TextInput style={styles.modalinput} underlineColor="transparent"
-            placeholder="Horário"
-            value={newTask.time}
-            onChangeText={(text) => onChange('time', text)}
-          />
+          
+          <View style={styles.hora}>
+            <View style={styles.horalow}>
+              <Text style={{ fontSize: 20}}>Hora Inicio</Text>
+              
+              {this.state.show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={this.state.date}
+                  mode={this.state.mode}
+                  is24Hour={true}
+                  display="default"
+                  onChange={this.onChangeDate}
+                />
+              )}
+            </View>
+            
+            <View style={styles.horalow}>
+              <Text style={{ fontSize: 20}}>Hora Fim</Text>
+
+              {this.state.showf && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={this.state.datef}
+                  mode={this.state.modef}
+                  is24Hour={true}
+                  display="default"
+                  onChange={this.onChangeDatef}
+                />
+              )}
+            </View>
+          </View>
+
           <Button style={styles.modalbutton1} onPress={onSave}><Text style={styles.btntxt}>Salvar</Text></Button>
           <Button style={styles.modalbutton2} onPress={onClose}><Text style={styles.btntxt}>Cancelar</Text></Button>
         </View>
@@ -292,6 +375,19 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 15,
     borderTopRightRadius: 0,
     borderBottomLeftRadius: 0,
+  },
+  hora: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignContent: 'center',
+    width: '60%',
+    marginTop: 25,
+    marginBottom: 15,
+  },
+  horalow: {
+    alignItems: 'center',
+    alignContent: 'center'
   },
 });
 
