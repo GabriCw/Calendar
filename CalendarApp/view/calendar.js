@@ -46,21 +46,21 @@ class Calendar extends Component {
       selectedDate: formattedDate,
     
       items:{
-        '2023-09-13': [{id:1, name: 'Reunião de trabalho', time: '14:00 - 16:00' }],
-        '2023-09-14': [{id:2, name: 'Ligar para o cliente', time: '11:00 - 11:30' }, {id:3, name: 'Ligar para o cliente', time: '11:00 - 11:30' }],
+        '2023-09-13': [{id:1, name: 'Reunião de trabalho', time: '14:00 - 16:00', text: '14:00', textf: '16:00' }],
+        '2023-09-14': [{id:2, name: 'Ligar para o cliente', time: '11:00 - 11:30', text: '13:00', textf: '15:00' }, {id:3, name: 'Ligar para o cliente', time: '11:00 - 11:30', text: '16:00', textf: '17:00' }],
       },
       isModalVisible: false,
       newTask: {
         name: '',
         time: '',
+        text: hour,
+        textf: hour
       },
       login: {
         username: 'Usuario',
         password: 'senha',
       },
       isLoginVisible: true,
-      text: hour,
-      textf: hour,
     };
   }
 
@@ -101,8 +101,8 @@ class Calendar extends Component {
 
     this.setState({
       isModalVisible: false,
-      newTask: { name: '', time: '' },
-    });
+      newTask: { name: '', time: '' , text: '', textf: ''},
+    }, () => {alert(this.state.newTask.text)});
   };
 
   handleDayPress = (day) => {
@@ -130,7 +130,7 @@ class Calendar extends Component {
                 renderItem={(item) => (
                   <View style={styles.item}>
                     <View>
-                      <Text style={styles.time}>{this.state.text} - {this.state.textf}</Text>
+                      <Text style={styles.time}>{item.text} - {item.textf}</Text>
                       <Text>{item.name}</Text>
                     </View>
                     <Button style={styles.btn} onPress={() => this.handleDelete(item.id)}><Text style={styles.btntxt}>X</Text></Button>
@@ -148,11 +148,12 @@ class Calendar extends Component {
                 onClose={() => this.setState({ isModalVisible: false })}
                 onSave={this.handleAdd}
                 onChange={(fieldName, value) => this.setState({ newTask: { ...this.state.newTask, [fieldName]: value } })}
-                textData={(value) => this.setState({ text: value })}
-                textDataf={(value) => this.setState({ textf: value })}
+                textData={(fieldName, value) => this.setState({ newTask: {...this.state.newTask, [fieldName]: value }})}
+                textDataf={(fieldName, value) => this.setState({ newTask: {...this.state.newTask, [fieldName]: value }})}
               />
             </>
           }
+
         </View>
       </>
     );
@@ -182,7 +183,7 @@ class AddTaskModal extends Component {
     let fDate = tempDate.getDate() + '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getFullYear();
     let fTime = tempDate.getHours() + ':' + tempDate.getMinutes(); 
 
-    this.props.textData(fTime);
+    this.props.textData("text", fTime);
   }
 
   onChangeDatef = (event, selectedDatef) => {
@@ -194,7 +195,7 @@ class AddTaskModal extends Component {
     let fDatef = tempDatef.getDate() + '-' + (tempDatef.getMonth() + 1) + '-' + tempDatef.getFullYear();
     let fTimef = tempDatef.getHours() + ':' + tempDatef.getMinutes(); 
 
-    this.props.textDataf(fTimef);
+    this.props.textDataf("textf", fTimef);
   }
 
 
