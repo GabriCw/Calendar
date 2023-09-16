@@ -4,6 +4,7 @@ import { Agenda } from 'react-native-calendars';
 import { TextInput } from 'react-native-paper';
 import Button from 'apsl-react-native-button';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 class Login extends Component {
 
@@ -46,7 +47,7 @@ class Calendar extends Component {
       selectedDate: formattedDate,
     
       items:{
-        '2023-09-13': [{id:1, name: 'Reunião de trabalho', time: '14:00 - 16:00', text: '14:00', textf: '16:00' }],
+        '2023-09-13': [{id:1, name: 'Reunião de trabalho', time: '14:00 - 16:00', text: '11:00', textf: '16:00' }],
         '2023-09-14': [{id:2, name: 'Ligar para o cliente', time: '11:00 - 11:30', text: '13:00', textf: '15:00' }, {id:3, name: 'Ligar para o cliente', time: '11:00 - 11:30', text: '16:00', textf: '17:00' }],
       },
       isModalVisible: false,
@@ -88,7 +89,9 @@ class Calendar extends Component {
       }
   }
 
-  handleAdd = () => {
+  handleAdd = (named) => {
+    const currentDate = new Date(); // Obtém a data atual
+    const hour = currentDate.getHours().toString().padStart(2, '0') + ':' + currentDate.getMinutes().toString().padStart(2, '0')
     const { newTask } = this.state;
     const dateKey = this.state.selectedDate; // Defina a chave de data apropriada aqui.
     const newItem = { id: Date.now(), ...newTask };
@@ -98,11 +101,11 @@ class Calendar extends Component {
     }
 
     this.state.items[dateKey].push(newItem);
-
     this.setState({
       isModalVisible: false,
-      newTask: { name: '', time: '' , text: '', textf: ''},
+      newTask: { name: '', time: '' , text: hour, textf: hour},
     }, () => {alert(this.state.newTask.text)});
+    
   };
 
   handleDayPress = (day) => {
