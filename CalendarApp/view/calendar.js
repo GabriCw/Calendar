@@ -57,8 +57,8 @@ class Calendar extends Component {
         textf: hour
       },
       login: {
-        username: 'Usuario',
-        password: 'senha',
+        username: 'Admin',
+        password: 'admin',
       },
       isLoginVisible: true,
     };
@@ -67,7 +67,7 @@ class Calendar extends Component {
   handleLogin = () => {
     // Verifique as credenciais aqui, por exemplo:
     const { username, password } = this.state.login;
-    if (username === 'Usuario' && password === 'senha') {
+    if (username === 'Admin' && password === 'admin') {
       this.setState({isLoginVisible: false});
       // alert('Login realizado com sucesso!');
     } else {
