@@ -47,8 +47,9 @@ class Calendar extends Component {
       selectedDate: formattedDate,
     
       items:{
-        '2023-09-13': [{id:1, name: 'Reunião de trabalho', text: '11:00', textf: '16:00' }],
-        '2023-09-14': [{id:2, name: 'Ligar para o cliente', text: '13:00', textf: '15:00' }, {id:3, name: 'Ligar para o cliente', text: '16:00', textf: '17:00' }],
+        '2023-09-18': [{id:1, name: 'Reunião de trabalho', text: '11:00', textf: '16:00' }],
+        '2023-09-19': [{id:2, name: 'Ligar para o cliente', text: '13:00', textf: '15:00' }, {id:3, name: 'Ligar para o cliente', text: '16:00', textf: '17:00' }],
+        '2023-09-21': [{id:1, name: 'Aniversário do Matheus', text: '20:00', textf: '23:30' }],
       },
       isModalVisible: false,
       newTask: {
